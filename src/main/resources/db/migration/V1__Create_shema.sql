@@ -1,0 +1,1 @@
+CREATE SCHEMA java_lessons;
