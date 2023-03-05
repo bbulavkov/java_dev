@@ -1,96 +1,50 @@
 package org.example;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import org.example.entity.Account;
+import org.example.storage.v2.PersistenceUtil;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
-import static org.example.util.FileUtils.getHtmlPageByPath;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        ServerSocket serverSocket = new ServerSocket(1000);
-        System.out.println("Server started");
+        SessionFactory sessionFactory = PersistenceUtil.getInstance();
+        Account account = null;
+        List<Session> sessions = new ArrayList<>();
+        for (int i = 0; i < 200; i++) {
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-
-        while (true) {
-            Socket socket = serverSocket.accept();
-            System.out.println("Connection received");
-
-            executorService.submit(() -> handleConnection(socket));
+            Session session = sessionFactory.openSession();
+            account = session.get(Account.class, 0);
+            sessions.add(session);
+            System.out.println("Session " + i + " " + session);
         }
-    }
 
-    private static void handleConnection(Socket socket) {
-        try {
-            InputStream inputStream = socket.getInputStream();
+        System.out.println(account);
+        System.out.println(sessions.size());
+//        //do work
+//        Account account = session.get(Account.class, 0);
+//        System.out.println(account);
 
-            String requestString = read(inputStream);
-            System.out.println("Request string \n" + requestString);
+//        List<Account> accounts = session
+//                .createQuery("from Account", Account.class)
+//                .list();
+//
+//        System.out.println("Is empty " + accounts.isEmpty());
+//        System.out.println("size() " + accounts.size());
 
-            Request request = RequestParser.parse(requestString);
-            System.out.println("Parsed request " + request);
+//        Account account = new Account();
+//        account.setMoney(0);
+//
+//        Transaction transaction = session.beginTransaction();
+//        session.persist(account);
+//        transaction.commit();
 
-            Response response = new Response();
+//        session.close();
 
-            response.setStatusCode(200);
-            response.setStatusString("Ok");
-            response.setProtocol("HTTP/1.1");
 
-            String body = "";
-
-            try {
-                body = getHtmlPageByPath(request.getPath());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-
-                response.setStatusCode(404);
-                response.setStatusString("Not found");
-            }
-
-            response.setBody(body);
-
-            Map<String, String> headers = new LinkedHashMap<>();
-            headers.put("Content-Type", "text/html; charset=utf-8");
-            headers.put("Content-Length", response.getBody().getBytes(StandardCharsets.UTF_8) + "");
-            response.setHeaders(headers);
-
-            System.out.println("Created response \n" + response);
-
-            try (OutputStream outputStream = socket.getOutputStream()) {
-                outputStream.write(response.toString().getBytes(StandardCharsets.UTF_8));
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-            try {
-                socket.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private static String read(InputStream inputStream) throws IOException, InterruptedException {
-        Thread.sleep(100);
-
-        byte[] buffer = new byte[1024 * 20];
-        int len = 0;
-        while (inputStream.available() > 0) {
-            System.out.println("Got some bytes to process " + inputStream.available());
-
-            int readBytes = inputStream.read(buffer, len, inputStream.available());
-            len += readBytes;
-            Thread.sleep(100);
-        }
-        return new String(buffer, 0, len);
     }
 }

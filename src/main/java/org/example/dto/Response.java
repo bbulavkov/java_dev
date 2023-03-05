@@ -1,4 +1,4 @@
-package org.example;
+package org.example.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;

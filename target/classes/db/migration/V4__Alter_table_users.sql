@@ -1,0 +1,1 @@
+ALTER table java_lessons.users drop column age;

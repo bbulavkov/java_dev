@@ -1,4 +1,6 @@
-package org.example;
+package org.example.parser;
+
+import org.example.dto.Request;
 
 import java.util.StringJoiner;
 

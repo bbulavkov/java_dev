@@ -1,4 +1,4 @@
-package org.example;
+package org.example.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class Request {
 
     String body;
 
-    enum Method {
+    public enum Method {
         GET,
         POST
     }
