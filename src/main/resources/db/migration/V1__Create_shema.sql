@@ -1,1 +1,1 @@
-CREATE SCHEMA java_lessons;
+CREATE SCHEMA IF NOT EXISTS java_lessons;

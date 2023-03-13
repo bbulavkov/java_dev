@@ -1,5 +1,8 @@
 package org.example.entity;
 
+import jakarta.persistence.Column;
+
+
 public class User {
     private int id;
     private String name;

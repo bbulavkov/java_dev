@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS java_lessons.users
 (
 
-    id   SERIAL PRIMARY KEY,
+    id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100),
     age  INT
 );
@@ -9,6 +9,6 @@ CREATE TABLE IF NOT EXISTS java_lessons.users
 
 CREATE TABLE IF NOT EXISTS java_lessons.account
 (
-    id    SERIAL PRIMARY KEY,
+    id    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     money INT
 );

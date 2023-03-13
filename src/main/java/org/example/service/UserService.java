@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.dao.UserCRUDRepository;
+import org.example.dao.v2.UserCRUDRepository;
 import org.example.entity.User;
 
 import java.sql.SQLException;

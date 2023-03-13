@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.dao.v2;
 
 import org.example.entity.User;
 import org.example.storage.DataSource;

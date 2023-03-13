@@ -1,15 +1,15 @@
 package org.example.service;
 
-import org.example.dao.AccountDAO;
+import org.example.dao.v2.AccountDAOImpl;
 import org.example.entity.Account;
 
 import java.sql.SQLException;
 
 public class AccountService {
 
-    private final AccountDAO accountDAO;
+    private final AccountDAOImpl accountDAO;
 
-    public AccountService(AccountDAO accountDAO) {
+    public AccountService(AccountDAOImpl accountDAO) {
         this.accountDAO = accountDAO;
     }
 

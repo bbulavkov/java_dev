@@ -1,50 +1,63 @@
 package org.example;
 
+import lombok.extern.slf4j.Slf4j;
+import org.example.dao.AccountDAO;
+import org.example.dao.v3.AccountDAOImpl;
 import org.example.entity.Account;
+import org.example.entity.AccountInfo;
+import org.example.entity.AccountType;
 import org.example.storage.v2.PersistenceUtil;
+import org.flywaydb.core.Flyway;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+        Flyway flyway = Flyway.configure()
+                .dataSource("jdbc:postgresql://localhost:5432/postgres",
+                        "postgres",
+                        "postgres")
+                .load();
+        flyway.migrate();
+
 
         SessionFactory sessionFactory = PersistenceUtil.getInstance();
-        Account account = null;
-        List<Session> sessions = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
 
-            Session session = sessionFactory.openSession();
-            account = session.get(Account.class, 0);
-            sessions.add(session);
-            System.out.println("Session " + i + " " + session);
-        }
-
-        System.out.println(account);
-        System.out.println(sessions.size());
-//        //do work
-//        Account account = session.get(Account.class, 0);
-//        System.out.println(account);
-
-//        List<Account> accounts = session
-//                .createQuery("from Account", Account.class)
-//                .list();
+        Session session = sessionFactory.openSession();
+//        Query<Account> query = session.createQuery("from Account where id = :id", Account.class);
+//        Query<Account> query = session.createNativeQuery("select  * from java_lessons.account where id = :id", Account.class);
 //
-//        System.out.println("Is empty " + accounts.isEmpty());
-//        System.out.println("size() " + accounts.size());
+//        query.setParameter("id", 7);
+//        Account account = query.getSingleResult();
+//        log.debug("Found account {}", account);
 
-//        Account account = new Account();
-//        account.setMoney(0);
+//        AccountDAO accountDAO = new AccountDAOImpl(sessionFactory);
+
+        Account account = session.get(Account.class, 6);
+//        account.setMoney(-100);
+//        account.setAccountType(AccountType.Direct);
 //
-//        Transaction transaction = session.beginTransaction();
-//        session.persist(account);
-//        transaction.commit();
+//        AccountInfo accountInfo = new AccountInfo();
+//
+//        accountInfo.setId(account.getId());
+//        accountInfo.setInfo("Text");
+//        accountInfo.setAccount(account);
+//
+////        session.persist(accountInfo);
+//
+//        account.setAccountInfo(accountInfo);
+//
+//        account.setAccountTypes(List.of("AccountTypeA", "AccountTypeB"));
 
-//        session.close();
-
+//        session.merge(account);
+//        accountDAO.merge(account);
+        log.debug("Found account {}", account);
 
     }
 }
