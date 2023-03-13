@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS java_lessons.course
+(
+
+    id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(100)
+);

@@ -1,9 +1,12 @@
-package org.example.entity;
+package org.example.notes.o2o.v2;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.example.converter.AccountTypesToStringConverter;
+import org.example.entity.AccountInfo;
+import org.example.entity.AccountType;
 
 import java.util.List;
 
@@ -12,7 +15,6 @@ import java.util.List;
 @Table(schema = "java_lessons")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@EqualsAndHashCode(exclude = "user")
 public class Account {
 
     @Id
@@ -38,12 +40,6 @@ public class Account {
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private AccountInfo accountInfo;
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @ToString.Exclude
-    private User user;
 
     public Account() {
     }

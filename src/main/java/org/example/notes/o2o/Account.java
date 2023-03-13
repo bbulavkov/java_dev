@@ -1,10 +1,14 @@
-package org.example.notes;
+package org.example.notes.o2o;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import org.example.converter.AccountTypesToStringConverter;
+import org.example.entity.AccountInfo;
 import org.example.entity.AccountType;
+
+import java.util.List;
 
 
 @Entity
@@ -21,33 +25,23 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     AccountType accountType;
 
-    public Account() {
-    }
-
-
-
-
-
-
-
-
-
-
-
-
 //    @ElementCollection
-//    @Column(name = "type")
-//    @CollectionTable(name = "account_account_types", schema = "java_lessons",
-//            joinColumns = @JoinColumn(name = "account_id")
-//    )
-//    List<AccountType> types;
-//
-//    @ElementCollection
-//    @Column(name = "sub_account")
-//    @CollectionTable(name = "account_sub_accounts",
+//    @CollectionTable(name = "account_types",
 //            schema = "java_lessons",
 //            joinColumns = @JoinColumn(name = "account_id"))
-//    List<String> subAccounts;
+//    @Column(name = "type")
+//    List<String> accountTypes;
 
+    @Column(name = "account_types")
+    @Convert(converter = AccountTypesToStringConverter.class)
+    List<String> accountTypes;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_info_id", referencedColumnName = "id")
+    private AccountInfo accountInfo;
+
+    public Account() {
+    }
 
 }
