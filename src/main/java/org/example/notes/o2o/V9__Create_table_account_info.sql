@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS java_lessons.account_info
-(
-    id   INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    info VARCHAR(200)
-);

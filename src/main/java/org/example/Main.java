@@ -12,12 +12,13 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Slf4j
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         Flyway flyway = Flyway.configure()
                 .dataSource("jdbc:postgresql://localhost:5432/postgres",
                         "postgres",
@@ -27,7 +28,6 @@ public class Main {
 
 
         SessionFactory sessionFactory = PersistenceUtil.getInstance();
-
         Session session = sessionFactory.openSession();
 //
 //        Account account = new Account();
@@ -95,18 +95,27 @@ public class Main {
         Course javaDevPro = new Course();
         javaDevPro.setName("Java dev pro1");
 
-        User user = session.get(User.class, 1);
-        Set<Course> courses = user.getCourses();
+        User user = new User();
+        user.setName("Bil");
+        user.setAge(21);
+
+        Set<Course> courses = new HashSet<>();
         courses.add(javaDevPro);
+
         user.setCourses(courses);
 
-        User user1 = session.get(User.class, 2);
+        User user1 = new User();
+        user1.setName("Jack");
+        user1.setAge(20);
+
         user1.setCourses(Set.of(javaDevPro));
 
         javaDevPro.setUsers(Set.of(user, user1));
 
         Transaction transaction = session.beginTransaction();
 
+        session.persist(user);
+        session.persist(user1);
         session.persist(javaDevPro);
 
         transaction.commit();
