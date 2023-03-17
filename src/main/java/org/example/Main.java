@@ -1,9 +1,12 @@
 package org.example;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.AccountDAO;
 import org.example.dao.v3.AccountDAOImpl;
 import org.example.entity.*;
+import org.example.service.UserService;
 import org.example.storage.v2.PersistenceUtil;
 import org.flywaydb.core.Flyway;
 import org.hibernate.Session;
@@ -16,9 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
+@Log4j2
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Flyway flyway = Flyway.configure()
                 .dataSource("jdbc:postgresql://localhost:5432/postgres",
                         "postgres",
@@ -29,6 +32,8 @@ public class Main {
 
         SessionFactory sessionFactory = PersistenceUtil.getInstance();
         Session session = sessionFactory.openSession();
+
+
 //
 //        Account account = new Account();
 //
@@ -61,7 +66,7 @@ public class Main {
 
 
         //1-n
-//        User user = new User();
+//        User user = session.get(User.class, 1);
 //        user.setName("John");
 //        user.setAge(21);
 //
@@ -81,9 +86,10 @@ public class Main {
 //        session.persist(user);
 //        session.persist(account1);
 //        session.persist(account2);
+//        transaction.commit();
 
 //        User user = session.get(User.class, 3);
-//
+
 //        log.debug("User {} ", user);
 //
 //        session.close();
@@ -92,34 +98,59 @@ public class Main {
 //        log.debug("Accounts {} ", accounts);
 
 
-        Course javaDevPro = new Course();
-        javaDevPro.setName("Java dev pro1");
+//        Course javaDevPro = new Course();
+//        javaDevPro.setName("Java dev pro1");
+//
+//        User user = new User();
+//        user.setName("Bil");
+//        user.setAge(21);
+//
+//        Set<Course> courses = new HashSet<>();
+//        courses.add(javaDevPro);
+//
+//        user.setCourses(courses);
+//
+//        User user1 = new User();
+//        user1.setName("Jack");
+//        user1.setAge(20);
+//
+//        user1.setCourses(Set.of(javaDevPro));
+//
+//        javaDevPro.setUsers(Set.of(user, user1));
+//
+//        Transaction transaction = session.beginTransaction();
+//
+//        session.persist(user);
+//        session.persist(user1);
+//        session.persist(javaDevPro);
+//
+//        transaction.commit();
 
-        User user = new User();
-        user.setName("Bil");
-        user.setAge(21);
+//        first level cache
 
-        Set<Course> courses = new HashSet<>();
-        courses.add(javaDevPro);
+//        User user = session.get(User.class, 1);
+//        log.debug("Found user {}", user);
+//
+//        Thread.sleep(1000);
+//
+//
+//        Session session1 = sessionFactory.openSession();
+//
+//
+//        user = session1.get(User.class, 1);
+//
+//        log.debug("Found user {}", user);
 
-        user.setCourses(courses);
 
-        User user1 = new User();
-        user1.setName("Jack");
-        user1.setAge(20);
+        List<Account> accounts = session.createQuery("from Account ", Account.class)
+                .list();
 
-        user1.setCourses(Set.of(javaDevPro));
+        log.debug("ACCOUNTS {}", accounts);
 
-        javaDevPro.setUsers(Set.of(user, user1));
 
-        Transaction transaction = session.beginTransaction();
+//        session.close();
 
-        session.persist(user);
-        session.persist(user1);
-        session.persist(javaDevPro);
-
-        transaction.commit();
-
-        session.close();
+        accounts.forEach(a ->
+                log.debug("USER {}", a.getUser()));
     }
 }

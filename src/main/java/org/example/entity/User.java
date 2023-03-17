@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -16,8 +17,8 @@ public class User {
     private String name;
     private int age;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Account> accounts;
+    @OneToMany(mappedBy = "user")
+    private Set<Account> accounts = new HashSet<>();
 
 
     @JoinTable(
@@ -27,7 +28,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     @ManyToMany
-    private Set<Course> courses;
+    private Set<Course> courses = new HashSet<>();
 
     public User(int id, String name, int age) {
         this.id = id;
@@ -42,5 +43,16 @@ public class User {
 
 
     public User() {
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", accounts=" + accounts +
+                ", courses=" + courses.size() +
+                '}';
     }
 }
