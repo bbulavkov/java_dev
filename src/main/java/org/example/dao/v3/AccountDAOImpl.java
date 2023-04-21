@@ -16,6 +16,7 @@ import org.hibernate.Transaction;
 public class AccountDAOImpl implements AccountDAO {
     SessionFactory sessionFactory;
 
+
     @Override
     public Account getById(int id) {
         Session session = sessionFactory.openSession();
